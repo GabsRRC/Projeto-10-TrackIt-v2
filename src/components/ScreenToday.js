@@ -49,14 +49,28 @@ export default function ScreenToday (){
       }, [reload]);
 
 
-    return(
+      if (percent > 0){
+        return(
         <Container>
             <Header/>
-                <p>{dayjs().format("dddd, DD/MM")}</p>
+                <h5>{dayjs().format("dddd, DD/MM")}</h5>
+                <h4>{percent}% dos hábitos concluídos</h4>
                 {habits.map((habit) => (<Today name={habit.name} key={habit.id} id={habit.id}  done={habit.done} currentSequence={habit.currentSequence}  highestSequence={habit.highestSequence} /> ))}
             <Footer/>
         </Container>
-    )}
+        )
+      } else {
+          return (
+        <Container>
+            <Header/>
+                <h5>{dayjs().format("dddd, DD/MM")}</h5>
+                <h3>Nenhum hábito concluído ainda</h3>
+                {habits.map((habit) => (<Today name={habit.name} key={habit.id} id={habit.id}  done={habit.done} currentSequence={habit.currentSequence}  highestSequence={habit.highestSequence} /> ))}
+            <Footer/>
+        </Container>
+          )
+      }
+}
 
 
 
@@ -160,6 +174,38 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h5{
+    font-family: 'Lexend Deca';
+font-style: normal;
+font-weight: 400;
+font-size: 22.976px;
+line-height: 29px;
+
+
+
+
+color: #126BA5;
+  }
+
+  h4{
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+    color: green;
+}
+
+h3{
+    font-family: 'Lexend Deca';
+font-style: normal;
+font-weight: 400;
+font-size: 17.976px;
+line-height: 22px;
+
+color: #BABABA;
+}
 
   .none{
       display: none;

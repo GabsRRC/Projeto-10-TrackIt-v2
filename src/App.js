@@ -15,7 +15,7 @@ export default function App() {
   const [progress, setProgress] = useState(null);
   const [reload, setReload]= useState(null);
   const [loading, setLoading]= useState(null);
-  const [percent, setPercent] = useState (null);
+  const [percent, setPercent] = useState (0);
 
   const contextValue = {token, setToken, picture, setPicture, selectDay, setSelectDay, progress, setProgress, reload, setReload, loading, setLoading, percent, setPercent};
 
