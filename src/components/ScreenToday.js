@@ -5,13 +5,29 @@ import Header from "./Header";
 import Footer from "./Footer";
 import axios from "axios";
 import UserContext from "./UserContext";
+import dayjs from "dayjs"
+import "dayjs/locale/pt-br";
+
 
 
 export default function ScreenToday (){
 
-    const {token} = useContext(UserContext);
+    const {token, percent, setPercent} = useContext(UserContext);
+    const {reload, setReload} = useContext(UserContext);
     const [habits, setHabits] = useState([]);
-    //const [habitDays, setHabitsDay] = useState( {days: []} );
+
+    function checkIsMark(obj) {
+        if (obj.done) {
+          return obj;
+        }
+      }
+
+    const filter = habits.filter(checkIsMark);
+    const percentage = Math.round((100 / habits.length) * filter.length);
+    setPercent(percentage);
+
+    dayjs.locale("pt-br");
+
 
     const config = {
         headers: {
@@ -30,12 +46,13 @@ export default function ScreenToday (){
           console.log(...response.data);
           console.log(habits);
         });
-      }, []);
+      }, [reload]);
 
 
     return(
         <Container>
             <Header/>
+                <p>{dayjs().format("dddd, DD/MM")}</p>
                 {habits.map((habit) => (<Today name={habit.name} key={habit.id} id={habit.id}  done={habit.done} currentSequence={habit.currentSequence}  highestSequence={habit.highestSequence} /> ))}
             <Footer/>
         </Container>
@@ -43,18 +60,61 @@ export default function ScreenToday (){
 
 
 
-function Today ({name, done, currentSequence, highestSequence}){
+function Today ({name, done, currentSequence, highestSequence, id}){
+
+    const {token} = useContext(UserContext);
+    const {reload, setReload} = useContext(UserContext);
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    function check (id){
+ 
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+          const promise = axios.post(
+            `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, {},
+            config
+          );
+    
+          promise.then((res) => {
+            console.log(res.data)
+            setReload(res)
+          });
+    }
+
+    function uncheck (id){
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, {}, config);
+
+        promise.then(res => {
+            console.log(res.data)
+            setReload(res)
+        })
+    }
+
 
     return(
         <ToDo>
             <p>{name}</p>
-            <h6>Sequência atual: {currentSequence} dias</h6>
-            <h6>Seu recorde: {highestSequence} dias</h6>
-            <span className="check"> <ion-icon name="checkbox"></ion-icon> </span>
+            <h6 style={done === true ? {color:"green"}: {}}>Sequência atual: {currentSequence} dias </h6>
+            <h6 style={currentSequence === highestSequence && currentSequence > 0 ? {color:"green"}: {}}>Seu recorde: {highestSequence} dias</h6>
+            <span className="check"> <ion-icon name="checkbox" style={done === true ? {color:"green"}: {}}    onClick={done === false ? () => check(id) : () => uncheck(id)}  ></ion-icon> </span>
         </ToDo>
     )
 }
-
 
 
 
@@ -67,6 +127,7 @@ width: 340px;
     border-radius: 5px;
     font-family: 'Lexend Deca';
     position: relative;
+    color: #E7E7E7;
 
     p{
         color: #666666;
@@ -86,7 +147,7 @@ width: 340px;
         position: absolute;
         top:0;
         right:0;
-        color: #E7E7E7;
+        //color: #E7E7E7;
         font-size: 90px;
     }
 

@@ -22,7 +22,8 @@ export default function Header (){
 //Styles
 
 const Top = styled.div`
-position: absolute;
+z-index:2;
+position: fixed;
 height: 70px;
 width:100%;
 top: 0px;

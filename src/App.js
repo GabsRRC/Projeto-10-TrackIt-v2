@@ -11,7 +11,13 @@ export default function App() {
 
   const [token, setToken] = useState(null);
   const [picture, setPicture] = useState(null);
-  const contextValue = {token, setToken, picture, setPicture};
+  const [selectDay, setSelectDay] = useState([]);
+  const [progress, setProgress] = useState(null);
+  const [reload, setReload]= useState(null);
+  const [loading, setLoading]= useState(null);
+  const [percent, setPercent] = useState (null);
+
+  const contextValue = {token, setToken, picture, setPicture, selectDay, setSelectDay, progress, setProgress, reload, setReload, loading, setLoading, percent, setPercent};
 
   return (
     <UserContext.Provider value={contextValue}>

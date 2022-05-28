@@ -10,6 +10,8 @@ import {Link, useNavigate} from 'react-router-dom'
 import styled from "styled-components";
 import logos from "../img/logos.svg"
 import axios from 'axios'
+import {Helmet} from "react-helmet";
+import Loading from "./Loading";
 
 export default function ScreenSingUp (){
 
@@ -17,11 +19,13 @@ export default function ScreenSingUp (){
     const [senha, setSenha] = useState('');
     const [name, setName] = useState('');
     const [picture, setPicture] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function singUp(event){
       event.preventDefault();
+      setIsLoading(true);
 
       const body = {
         email: email,
@@ -37,22 +41,27 @@ export default function ScreenSingUp (){
       })
       .catch(err => {
         console.log(err)
+        alert("Algo deu errado, tente novamente");
+        setIsLoading(false);
       })
     }
 
     return(
         <>  
-            <Box>
+            <Helmet>
+                <style>{"body { background-color: #FFFFFF; }"}</style>
+            </Helmet>
+            <Container>
               <form onSubmit={singUp}>
                 <img src={logos} alt="track it logo"/>
-                <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)}/>
-                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)}/>
-                <input placeholder="nome" type="text" value={name} required onChange={e => setName(e.target.value)}/>
-                <input placeholder="foto" type="text" value={picture} required onChange={e => setPicture(e.target.value)}/>
-                <button type="submit" className="button">Cadastrar</button>
+                <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)} disabled={isLoading}/>
+                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)} disabled={isLoading}/>
+                <input placeholder="nome" type="text" value={name} required onChange={e => setName(e.target.value)} disabled={isLoading}/>
+                <input placeholder="foto" type="text" value={picture} required onChange={e => setPicture(e.target.value)} disabled={isLoading}/>
+                <button type="submit" className="button" disabled={isLoading}>{" "} {isLoading ? <Loading /> : "Cadastrar"}</button>
                 <Link to='/'><p>Já tem uma conta? Faça login!</p></Link>
               </form>
-            </Box>
+            </Container>
         </>
     )
 }
@@ -60,7 +69,7 @@ export default function ScreenSingUp (){
 
 //Styles
 
-const Box = styled.div`
+const Container = styled.div`
 
   display: flex;
   flex-direction: column;
@@ -85,7 +94,7 @@ const Box = styled.div`
     font-style: normal;
     font-weight: 400;
     font-size: 19.976px;
-    //color: #DBDBDB;
+    color: #666666;
     margin: 3px;
 
     &::placeholder{
@@ -140,6 +149,8 @@ const Box = styled.div`
   button{
     border: 0;
     padding: 0;
+    border: none;
+    background: transparent;
   }
 `;
 

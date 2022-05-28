@@ -11,6 +11,10 @@ import styled from "styled-components";
 import logos from "../img/logos.svg"
 import axios from 'axios';
 import UserContext from "./UserContext";
+import {Helmet} from "react-helmet";
+import Loading from "./Loading";
+
+
 
 export default function ScreenLogin (){
 
@@ -18,11 +22,14 @@ export default function ScreenLogin (){
     const {setPicture} =  useContext(UserContext);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
   
     function fazerLogin(event) {
       event.preventDefault();
+
+      setIsLoading(true);
+
       const body = {
         email: email,
         password: senha
@@ -31,24 +38,29 @@ export default function ScreenLogin (){
       const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body)
       promise
       .then(res => {
-        console.log(res.data)
         setToken(res.data.token)
         setPicture(res.data.image)
         navigate("/habitos")
       })
       .catch(err => {
-        console.log(err)
+        alert("Algo deu errado, tente novamente");
+        setIsLoading(false);
+        setEmail('');
+        setSenha('');
       })
     }
 
     return(
         <>  
+            <Helmet>
+                <style>{"body { background-color: #FFFFFF; }"}</style>
+            </Helmet>
             <Container >
               <form onSubmit={fazerLogin}>
                 <img src={logos} alt="logo trackit"/>
-                <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)}/>
-                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)}/>
-                <button><div type="submit" className="button" >Entrar</div></button>
+                <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)} disabled={isLoading} />
+                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)} disabled={isLoading}/>
+                <button className="button" type="submit" disabled={isLoading}> {" "} {isLoading ? <Loading /> : "Entrar"}</button>
                 <Link to="/cadastro"><p>Não tem uma conta? Cadastre-se!</p></Link>
               </form>
             </Container>
@@ -83,7 +95,7 @@ const Container = styled.div`
     font-style: normal;
     font-weight: 400;
     font-size: 19.976px;
-    color: #DBDBDB;
+    color: #666666;
     margin:3px;
 
     &::placeholder{
@@ -137,9 +149,11 @@ const Container = styled.div`
   }
 
   button{
-    border: 0;
     padding: 0;
-    margin: 0;
-  }
+    margin:0;
+    border: none;
+    background: transparent;
+}
+
 `;
 

@@ -9,6 +9,9 @@ export default function RenderHabits() {
 
     const {token} = useContext(UserContext);
     const [habits, setHabits] = useState([]);
+    const {reload, setReload} = useContext(UserContext);
+
+
 
     const config = {
         headers: {
@@ -25,18 +28,30 @@ export default function RenderHabits() {
           setHabits([...response.data]);
           console.log(...response.data);
           console.log(habits);
-        });
-      }, []);
+          
+          }
+        );
+      }, [reload]);
 
+      if (habits.length < 1) {
+          return (
+              <None>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</None>
+          )
+      } else {
+        return(
+            <>{habits.map((habit) => (<Habit name={habit.name} key={habit.id} days={habit.days}  id={habit.id}/> ))}</>
+        )
+      }
 
-    return(
-        <>{habits.map((habit) => (<Habit name={habit.name} key={habit.id} days={habit.days}  id={habit.id}/> ))}</>
-    )
+    // return(
+    //     <>{habits.map((habit) => (<Habit name={habit.name} key={habit.id} days={habit.days}  id={habit.id}/> ))}</>
+    // )
 }
 
 
 function Habit({name, days, id}){
     const {token} = useContext(UserContext);
+    const {reload, setReload} = useContext(UserContext);
 
     const weekDays = [
         { id: 0, letter: 'D' },
@@ -70,6 +85,7 @@ function Habit({name, days, id}){
 
       promise.then((response) => {
         console.log('deletado')
+        setReload(response);
       });
       promise.catch((error) => {});
       console.log('error')
@@ -89,6 +105,15 @@ function Habit({name, days, id}){
 }
 
 
+const None = styled.div`
+font-family: 'Lexend Deca';
+font-style: normal;
+font-weight: 400;
+font-size: 17.976px;
+line-height: 22px;
+color: #666666;
+margin: 22px;
+`
 
 
 const Box = styled.div`

@@ -32,6 +32,7 @@ export default function ScreenHistory (){
     return(
         <>
         <Header/>
+        <p>Em breve você poderá ver o histórico dos seus hábitos aqui! Em breve você poderá ver o histórico dos seus hábitos aqui!Em breve você poderá ver o histórico dos seus hábitos aqui!Em breve você poderá ver o histórico dos seus hábitos aqui!Em breve você poderá ver o histórico dos seus hábitos aqui!Em breve você poderá ver o histórico dos seus hábitos aqui!Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
         <Footer/>
         </>
     )

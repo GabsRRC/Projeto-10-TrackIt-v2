@@ -7,16 +7,19 @@ Adicionar um hábito ---- POST no AXIOS
 
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import Week from "./Week";
+//import Week from "./Week";
 import UserContext from "./UserContext";
 import axios from "axios";
+import Loading from "./Loading";
 
 export default function AddHabits (){
     const {token} = useContext(UserContext);
     const [visible, setVisible] = useState("hide");
     const [inputName, setInputName] = useState("");
-
-    //console.log(token)
+    const {selectDay, setSelectDay} = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(false);
+    const {reload, setReload} = useContext(UserContext);
+    //const {loading, setLoading} = useContext(UserContext);
 
     function showAdd() {
         setVisible("")
@@ -24,11 +27,14 @@ export default function AddHabits (){
 
     function hideAdd(){
         setVisible("hide")
-        setInputName("")
+        setSelectDay([])
     }
 
+
     function sendHabits() {
-        //event.preventDefault();
+
+            setIsLoading(true);
+            //setLoading(true);
     
             const config = {
                 headers: {
@@ -38,20 +44,30 @@ export default function AddHabits (){
 
             const body = {
                 name: inputName,
-                days: [0, 2, 4, 6] 
+                days: selectDay
             }
     
             const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', body ,config);
     
-            promise.then(res => {
-                console.log(res.data)
+            promise
+            .then(res => {
                 setInputName("")
                 setVisible("hide")
+                setIsLoading(false)
+                setSelectDay([])
+                setReload(res);
+                //setLoading(false)
             })
+            .catch(err => {
+                setIsLoading(false)
+                //setLoading(false)
+                alert("Algo deu errado, tente novamente");
+              })
+
       }
-   
+
     return(
-        <Container>
+        <Containerr>
             <Add>
                 <div>
                     <p>Meus hábitos</p>
@@ -59,23 +75,83 @@ export default function AddHabits (){
                 </div>
             </Add>
             <Box className={visible}>
-                <input placeholder="nome do hábito" value={inputName} onChange={(e) => setInputName(e.target.value)} />
+                <input placeholder="nome do hábito" value={inputName} onChange={(e) => setInputName(e.target.value)} disabled={isLoading}/>
                 <div>
                     <Week/>
                 </div>
                 <div className="end">
-                    <p onClick={hideAdd}>cancelar</p>
-                    <div className="button" onClick={sendHabits}>salvar</div>
+                    <p onClick={hideAdd}>Cancelar</p>
+                    <div className="button" onClick={sendHabits}>{" "} {isLoading ? <Loading /> : "Salvar"}</div>
                 </div>
             </Box>
+        </Containerr>
+    )
+}
+ // {loading ? {} : {setSelectDay([...selectDay, props.id]);}
+
+
+function Week (){
+
+    //const {loading, setLoading} = useContext(UserContext);
+    const {selectDay, setSelectDay} = useContext(UserContext);
+
+    function eachDay (props){
+
+        return(
+            <Days key={props.id}  onClick={() => {setSelectDay([...selectDay, props.id])} }
+
+
+              style={selectDay.includes(props.id)? { backgroundColor: "#CFCFCF", color: "#FFFFFF" }: {}} > {props.letter} </Days>
+        )
+    }
+
+    const weekDays = [
+        { id: 0, letter: 'D' },
+        { id: 1, letter: 'S' },
+        { id: 2, letter: 'T' },
+        { id: 3, letter: 'Q' },
+        { id: 4, letter: 'Q' },
+        { id: 5, letter: 'S' },
+        { id: 6, letter: 'S' }
+    ]
+
+    return (
+        <Container>
+            {weekDays.map(eachDay)}
         </Container>
     )
 }
 
 
 
-
 const Container = styled.div`
+    margin-left: 10px;
+    display: flex;
+`
+
+const Days = styled.div`
+    width: 30px;
+    height: 30px;
+    margin: 3px;
+    border: 1px solid #D5D5D5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    color: #d5d5d5;
+    font-family: 'Lexend Deca';
+    
+    color: #d5d5d5;
+
+
+    div{
+        display: flex;
+    }
+`
+
+
+
+const Containerr = styled.div`
 .hide{
     display:none !important;
 }
