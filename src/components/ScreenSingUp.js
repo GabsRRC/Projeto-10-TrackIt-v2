@@ -1,6 +1,6 @@
 /*
 
-Tela que exibe o cadastro
+Tela que exibe o cadastro ---- POST no AXIOS
 
 */
 
@@ -8,15 +8,15 @@ Tela que exibe o cadastro
 import React, {useState } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 import styled from "styled-components";
-import logos from "../img/logos.svg"
 import axios from 'axios'
 import {Helmet} from "react-helmet";
 import Loading from "./Loading";
+import logos from "../img/logos.svg"
 
 export default function ScreenSingUp (){
 
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [picture, setPicture] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -31,16 +31,16 @@ export default function ScreenSingUp (){
         email: email,
         name: name,
         image: picture,
-        password: senha
+        password: password
       }
+
       const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', body)
       promise
       .then(res => {
-        console.log(res.data)
-        navigate("/")
+        navigate("/");
+        setIsLoading(false);
       })
       .catch(err => {
-        console.log(err)
         alert("Algo deu errado, tente novamente");
         setIsLoading(false);
       })
@@ -55,7 +55,7 @@ export default function ScreenSingUp (){
               <form onSubmit={singUp}>
                 <img src={logos} alt="track it logo"/>
                 <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)} disabled={isLoading}/>
-                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)} disabled={isLoading}/>
+                <input placeholder="senha" type="password" value={password} required onChange={e => setPassword(e.target.value)} disabled={isLoading}/>
                 <input placeholder="nome" type="text" value={name} required onChange={e => setName(e.target.value)} disabled={isLoading}/>
                 <input placeholder="foto" type="text" value={picture} required onChange={e => setPicture(e.target.value)} disabled={isLoading}/>
                 <button type="submit" className="button" disabled={isLoading}>{" "} {isLoading ? <Loading /> : "Cadastrar"}</button>

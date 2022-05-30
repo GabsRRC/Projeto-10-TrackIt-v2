@@ -1,13 +1,12 @@
 /*
 
-Exibir o rodapé da página
+Exibir o rodapé da página com o progresso no botão
 
 */
 
-
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext} from "react";
 import UserContext from "./UserContext";
 import { buildStyles } from "react-circular-progressbar";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -23,7 +22,7 @@ export default function Footer(){
                 <Link to="/habitos" > <div>Hábitos</div> </Link>
                 <Link to="/historico" > <div>Histórico</div> </Link>
             </div>
-            <Link to="/hoje" ><div className="main-button button">
+            <Link to="/hoje" ><div className="main button">
           <CircularProgressbar
             value={percent}
             text={"Hoje"}
@@ -43,18 +42,17 @@ export default function Footer(){
 
 
 const Bottom = styled.div`
-position: fixed;
-bottom: 0;
-width:100%;
-height: 70px;
-background: #FFFFFF;
+  position: fixed;
+  bottom: 0;
+  width:100%;
+  height: 70px;
+  background: #FFFFFF;
 
-.main-button {
+.main {
     background-color: #52b6ff;
     width: 91px;
     height: 91px;
     border-radius: 100%;
-    //margin-bottom: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,13 +87,13 @@ background: #FFFFFF;
 }
 
 p{
-font-family: 'Lexend Deca';
-font-style: normal;
-font-weight: 400;
-font-size: 17.976px;
-line-height: 22px;
-text-align: center;
-color: #52B6FF !important;
+  font-family: 'Lexend Deca';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17.976px;
+  line-height: 22px;
+  text-align: center;
+  color: #52B6FF !important;
 }
 
 a {

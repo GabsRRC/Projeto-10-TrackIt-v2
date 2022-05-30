@@ -1,3 +1,10 @@
+/*
+
+Renderiza TODOS os hábitos ---- GET no AXIOS
+Deleta hábitos ---- POST no AXIOS
+
+*/
+
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import UserContext from "./UserContext";
@@ -9,8 +16,7 @@ export default function RenderHabits() {
 
     const {token} = useContext(UserContext);
     const [habits, setHabits] = useState([]);
-    const {reload, setReload} = useContext(UserContext);
-
+    const {reload} = useContext(UserContext);
 
 
     const config = {
@@ -26,8 +32,6 @@ export default function RenderHabits() {
     
         promise.then((response) => {
           setHabits([...response.data]);
-          console.log(...response.data);
-          console.log(habits);
           
           }
         );
@@ -42,16 +46,12 @@ export default function RenderHabits() {
             <>{habits.map((habit) => (<Habit name={habit.name} key={habit.id} days={habit.days}  id={habit.id}/> ))}</>
         )
       }
-
-    // return(
-    //     <>{habits.map((habit) => (<Habit name={habit.name} key={habit.id} days={habit.days}  id={habit.id}/> ))}</>
-    // )
 }
 
 
 function Habit({name, days, id}){
     const {token} = useContext(UserContext);
-    const {reload, setReload} = useContext(UserContext);
+    const {setReload} = useContext(UserContext);
 
     const weekDays = [
         { id: 0, letter: 'D' },
@@ -73,24 +73,28 @@ function Habit({name, days, id}){
 
     function deleteHabit(id) {
 
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-    }
-      const promise = axios.delete(
-        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
-        config
-      );
 
-      promise.then((response) => {
-        console.log('deletado')
-        setReload(response);
-      });
-      promise.catch((error) => {});
-      console.log('error')
+        if(window.confirm("Deseja apagar o hábito?") == true){
 
-  }
+              const promise = axios.delete(
+                `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
+                config
+              );
+        
+              promise.then((response) => {
+                setReload(response);
+              });
+
+        } else {
+
+        }
+
+ }
 
 
     return (
@@ -105,14 +109,19 @@ function Habit({name, days, id}){
 }
 
 
+//Styles
+
 const None = styled.div`
-font-family: 'Lexend Deca';
-font-style: normal;
-font-weight: 400;
-font-size: 17.976px;
-line-height: 22px;
-color: #666666;
-margin: 22px;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+    color: #666666;
+    margin: 22px;
+    width: 320px;
+    text-align: center;
+
 `
 
 
@@ -132,7 +141,6 @@ const Weekdays = styled.div`
     border-radius: 3px;
     color: #d5d5d5;
     font-family: 'Lexend Deca';
-    
     color: #d5d5d5;
     background-color: #FFFFFF;
 
@@ -161,10 +169,10 @@ const Habits = styled.div`
         top:0;
         right:0;
 
-        img{
-            width: 20px;
-            height: 20px;
-            margin: 10px
+    img{
+        width: 20px;
+        height: 20px;
+        margin: 10px
         }
     }
 `

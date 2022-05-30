@@ -1,3 +1,9 @@
+/*
+
+Tela que exibe o histórico de hábitos
+
+*/
+
 import React, {useEffect, useContext, useState} from "react";
 import styled from "styled-components";
 import Header from "./Header";
@@ -24,8 +30,6 @@ export default function ScreenHistory (){
     
         promise.then((response) => {
           setHabits([...response.data]);
-          console.log(...response.data);
-          console.log(habits);
         });
       }, []);
 
@@ -44,35 +48,35 @@ export default function ScreenHistory (){
 const Container = styled.div`
     margin-top: 100px;
     margin-bottom: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  //width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 
   h5{
     font-family: 'Lexend Deca';
-font-style: normal;
-font-weight: 400;
-font-size: 22.976px;
-line-height: 29px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22.976px;
+    line-height: 29px;
+    color: #126BA5;
 
-
-color: #126BA5;
   }
   h6{
-  font-family: 'Lexend Deca';
-font-style: normal;
-font-weight: 400;
-font-size: 17.976px;
-line-height: 22px;
-width: 280px;
-color: #666666;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+    width: 280px;
+    color: #666666;
+    margin-top: 15px;
 }
 
 
   .none{
-      display: none;
+    display: none;
   }
 
   a {

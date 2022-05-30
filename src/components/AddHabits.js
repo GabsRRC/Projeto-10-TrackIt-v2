@@ -4,22 +4,21 @@ Adicionar um hábito ---- POST no AXIOS
 
 */
 
-
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-//import Week from "./Week";
 import UserContext from "./UserContext";
 import axios from "axios";
 import Loading from "./Loading";
 
 export default function AddHabits (){
+
     const {token} = useContext(UserContext);
+    const { setReload} = useContext(UserContext);
+    const { setLoading} = useContext(UserContext);
+    const {selectDay, setSelectDay} = useContext(UserContext);
     const [visible, setVisible] = useState("hide");
     const [inputName, setInputName] = useState("");
-    const {selectDay, setSelectDay} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const {reload, setReload} = useContext(UserContext);
-    //const {loading, setLoading} = useContext(UserContext);
 
     function showAdd() {
         setVisible("")
@@ -33,8 +32,10 @@ export default function AddHabits (){
 
     function sendHabits() {
 
+        if (selectDay.length > 0 && inputName !== ""){
+
             setIsLoading(true);
-            //setLoading(true);
+            setLoading(true);
     
             const config = {
                 headers: {
@@ -56,18 +57,25 @@ export default function AddHabits (){
                 setIsLoading(false)
                 setSelectDay([])
                 setReload(res);
-                //setLoading(false)
+                setLoading(false)
             })
             .catch(err => {
                 setIsLoading(false)
-                //setLoading(false)
+                setLoading(false)
                 alert("Algo deu errado, tente novamente");
               })
+
+        } else {
+            alert("Preencha os dados corretamente")
+        }
+
+
+
 
       }
 
     return(
-        <Containerr>
+        <Container>
             <Add>
                 <div>
                     <p>Meus hábitos</p>
@@ -77,31 +85,29 @@ export default function AddHabits (){
             <Box className={visible}>
                 <input placeholder="nome do hábito" value={inputName} onChange={(e) => setInputName(e.target.value)} disabled={isLoading}/>
                 <div>
-                    <Week/>
+                    <Week isLoading={isLoading}/>
                 </div>
                 <div className="end">
                     <p onClick={hideAdd}>Cancelar</p>
-                    <div className="button" onClick={sendHabits}>{" "} {isLoading ? <Loading /> : "Salvar"}</div>
+                    <div className="button" onClick={sendHabits}> {isLoading ? <Loading /> : "Salvar"}</div>
                 </div>
             </Box>
-        </Containerr>
+        </Container>
     )
 }
- // {loading ? {} : {setSelectDay([...selectDay, props.id]);}
 
 
 function Week (){
 
-    //const {loading, setLoading} = useContext(UserContext);
+    const {loading} = useContext(UserContext);
     const {selectDay, setSelectDay} = useContext(UserContext);
 
     function eachDay (props){
 
         return(
-            <Days key={props.id}  onClick={() => {setSelectDay([...selectDay, props.id])} }
-
-
-              style={selectDay.includes(props.id)? { backgroundColor: "#CFCFCF", color: "#FFFFFF" }: {}} > {props.letter} </Days>
+            <Days key={props.id} style={selectDay.includes(props.id)? { backgroundColor: "#CFCFCF", color: "#FFFFFF" }: {}}> 
+                <button onClick={loading? {} : () => {setSelectDay([...selectDay, props.id])}} >{props.letter} </button> 
+            </Days>
         )
     }
 
@@ -116,42 +122,16 @@ function Week (){
     ]
 
     return (
-        <Container>
+        <AllDays>
             {weekDays.map(eachDay)}
-        </Container>
+        </AllDays>
     )
 }
 
 
+//Styles
 
 const Container = styled.div`
-    margin-left: 10px;
-    display: flex;
-`
-
-const Days = styled.div`
-    width: 30px;
-    height: 30px;
-    margin: 3px;
-    border: 1px solid #D5D5D5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 3px;
-    color: #d5d5d5;
-    font-family: 'Lexend Deca';
-    
-    color: #d5d5d5;
-
-
-    div{
-        display: flex;
-    }
-`
-
-
-
-const Containerr = styled.div`
 .hide{
     display:none !important;
 }
@@ -189,18 +169,14 @@ p{
 }
 `
 
-
 const Box = styled.div`
 
-width: 340px;
-height: 180px;
-//background: #FFFFFF;
-border-radius: 5px;
-display: flex;
-flex-direction: column;
-//align-items: center;
-background-color: #FFFFFF;
-
+    width: 340px;
+    height: 180px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
 
 input{
     box-sizing: border-box;
@@ -211,7 +187,6 @@ input{
     border-radius: 5px;
     margin: 15px 0 5px 13px;
     font-family: 'Lexend Deca';
-    //color: #dbdbdb;
 
     &::placeholder{
         color: #dbdbdb;
@@ -248,3 +223,38 @@ div{
     display: flex;
 }
 `
+//Dias da semana
+
+const AllDays = styled.div`
+    margin-left: 10px;
+    display: flex;
+`
+
+const Days = styled.div`
+    width: 30px;
+    height: 30px;
+    margin: 3px;
+    border: 1px solid #D5D5D5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    color: #d5d5d5;
+    font-family: 'Lexend Deca';
+
+
+    div{
+        display: flex;
+    }
+
+    button{
+    border: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: 'Lexend Deca';
+    font-size: 21px;
+  }
+`
+

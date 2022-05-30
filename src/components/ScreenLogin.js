@@ -1,6 +1,7 @@
 /*
 
-Tela que exibe o login
+Tela que exibe o login ---- POST no AXIOS
+Pega token
 
 */
 
@@ -8,12 +9,11 @@ Tela que exibe o login
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import logos from "../img/logos.svg"
+import {Helmet} from "react-helmet";
 import axios from 'axios';
 import UserContext from "./UserContext";
-import {Helmet} from "react-helmet";
 import Loading from "./Loading";
-
+import logos from "../img/logos.svg"
 
 
 export default function ScreenLogin (){
@@ -21,32 +21,32 @@ export default function ScreenLogin (){
     const {setToken} = useContext(UserContext);
     const {setPicture} =  useContext(UserContext);
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
   
-    function fazerLogin(event) {
+    function submitLogin(event) {
       event.preventDefault();
 
       setIsLoading(true);
 
       const body = {
         email: email,
-        password: senha
+        password: password
       }
 
       const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body)
       promise
       .then(res => {
-        setToken(res.data.token)
-        setPicture(res.data.image)
-        navigate("/habitos")
+        setToken(res.data.token);
+        setPicture(res.data.image);
+        navigate("/hoje");
+        setIsLoading(false);
+
       })
       .catch(err => {
         alert("Algo deu errado, tente novamente");
         setIsLoading(false);
-        setEmail('');
-        setSenha('');
       })
     }
 
@@ -56,10 +56,10 @@ export default function ScreenLogin (){
                 <style>{"body { background-color: #FFFFFF; }"}</style>
             </Helmet>
             <Container >
-              <form onSubmit={fazerLogin}>
+              <form onSubmit={submitLogin}>
                 <img src={logos} alt="logo trackit"/>
                 <input placeholder="email" type="email" value={email} required onChange={e => setEmail(e.target.value)} disabled={isLoading} />
-                <input placeholder="senha" type="password" value={senha} required onChange={e => setSenha(e.target.value)} disabled={isLoading}/>
+                <input placeholder="senha" type="password" value={password} required onChange={e => setPassword(e.target.value)} disabled={isLoading}/>
                 <button className="button" type="submit" disabled={isLoading}> {" "} {isLoading ? <Loading /> : "Entrar"}</button>
                 <Link to="/cadastro"><p>Não tem uma conta? Cadastre-se!</p></Link>
               </form>
