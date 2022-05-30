@@ -18,7 +18,7 @@ import Footer from "./Footer";
 
 export default function ScreenToday (){
 
-    const {token, percent, setPercent} = useContext(UserContext);
+    const {token, percent, setPercent, localToken} = useContext(UserContext);
     const {reload} = useContext(UserContext);
     const [habits, setHabits] = useState([]);
 
@@ -33,7 +33,7 @@ export default function ScreenToday (){
     setPercent(percentage);
 
     dayjs.locale("pt-br");
-
+      
 
     const config = {
         headers: {

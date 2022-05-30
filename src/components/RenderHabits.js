@@ -37,6 +37,7 @@ export default function RenderHabits() {
         );
       }, [reload]);
 
+
       if (habits.length < 1) {
           return (
               <None>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</None>

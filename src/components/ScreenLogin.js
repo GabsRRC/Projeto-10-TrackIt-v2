@@ -18,12 +18,12 @@ import logos from "../img/logos.svg"
 
 export default function ScreenLogin (){
 
-    const {setToken} = useContext(UserContext);
-    const {setPicture} =  useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const { setLocalToken, setLocalUser } = useContext(UserContext)
   
     function submitLogin(event) {
       event.preventDefault();
@@ -38,8 +38,8 @@ export default function ScreenLogin (){
       const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body)
       promise
       .then(res => {
-        setToken(res.data.token);
-        setPicture(res.data.image);
+        setLocalToken(res.data.token)
+        setLocalUser(res.data.image)
         navigate("/hoje");
         setIsLoading(false);
 

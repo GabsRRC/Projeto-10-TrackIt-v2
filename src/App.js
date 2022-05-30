@@ -8,16 +8,36 @@ import ScreenHistory from './components/ScreenHistory';
 import UserContext from './components/UserContext';
 
 export default function App() {
+  const localToken = (localStorage.getItem('@trackit/token'));
+  const [token, setToken] = useState(localToken);
 
-  const [token, setToken] = useState(null);
-  const [picture, setPicture] = useState(null);
+  const localUser = (localStorage.getItem('@trackit/user'));
+  const [picture, setPicture] = useState(localUser);
+
+
   const [selectDay, setSelectDay] = useState([]);
   const [progress, setProgress] = useState(null);
   const [reload, setReload]= useState(null);
   const [loading, setLoading]= useState(null);
   const [percent, setPercent] = useState (0);
 
-  const contextValue = {token, setToken, picture, setPicture, selectDay, setSelectDay, progress, setProgress, reload, setReload, loading, setLoading, percent, setPercent};
+
+  function setLocalToken(token) {
+    setToken(token)
+    localStorage.setItem('@trackit/token', token)
+  }
+
+  function setLocalUser(user) {
+    setPicture(user)
+    localStorage.setItem('@trackit/user', user)
+  }
+
+
+
+  const contextValue = {setLocalUser ,setLocalToken, localToken ,token, setToken, picture, setPicture, selectDay, setSelectDay, progress, setProgress, reload, setReload, loading, setLoading, percent, setPercent};
+
+
+
 
   return (
     <UserContext.Provider value={contextValue}>
